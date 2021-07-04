@@ -1,67 +1,106 @@
 <template>
   <div>
-    <b-input v-model="subject" placeholder="제목을 입력해 주세요"></b-input>
-    <b-form-textarea
-      v-model="context"
-      placeholder="내용을 입력해 주세요"
-      rows="3"
-      max-rows="6"
-    ></b-form-textarea>
-    <b-button @click="updateMode ? updateContent() : uploadContent()">저장</b-button>
-    <b-button @click="cancle">취소</b-button>
+    <b-card>
+      <div class="content-detail-content-info">
+        <div class="content-detail-content-info-left">
+          <div class="content-detail-content-info-left-number">
+            {{contentId}}
+          </div>
+          <div class="content-detail-content-info-left-subject">
+            {{title}}
+          </div>
+        </div>
+        <div class="content-detail-content-info-right">
+          <div class="content-detail-content-info-right-user">
+            글쓴이: {{user}}
+          </div>
+          <div class="content-detail-content-info-right-created">
+            등록일: {{created}}
+          </div>
+        </div>
+      </div>
+      <div class="content-detail-content">
+        {{context}}
+      </div>
+      <div class="content-detail-button">
+        <b-button variant="primary">수정</b-button>
+        <b-button variant="primary" @click="updateData">수정</b-button>
+        <b-button variant="success" @click="deleteData">삭제</b-button>
+      </div>
+      <div class="content-detail-comment">
+        덧글
+      </div>
+    </b-card>
   </div>
 </template>
 <script>
-import data from '@/data'
+import data from "@/data";
 export default {
-  name: 'Create',
+  name: "ContentDetail",
   data() {
+    const contentId = Number(this.$route.params.contentId);
+    const contentData = data.Content.filter(item => item.content_id === contentId)[0]
     return {
-      subject: '',
-      context: '',
-      userId: 1,
-      createdAt: '2019-04-17 11:32:42',
-      updatedAt: null,
-      updateObject: null,
-      updateMode: this.$route.params.contentId > 0 ? true : false
-    }
-  },
-  created() {
-    if (this.$route.params.contentId > 0) {
-      const contentId = Number(this.$route.params.contentId)
-      this.updateObject = data.Content.filter(item => item.content_id === contentId)[0]
-      this.subject = this.updateObject.title;
-      this.context = this.updateObject.context;
-    }
+      contentId: contentId,
+      title: contentData.title,
+      context: contentData.context,
+      user: data.User.filter(item => item.user_id === contentData.user_id)[0]
+        .name,
+      created: contentData.created_at
+    };
   },
   methods: {
-    uploadContent() {
-      let items = data.Content.sort((a,b) => {return b.content_id - a.content_id})
-      const content_id = items[0].content_id + 1
-      data.Content.push({
-        content_id: content_id,
-        user_id: this.userId,
-        title: this.subject,
-        context: this.context,
-        created_at: this.createdAt,
-        updated_at: null
-      })
+    deleteData() {
+      const content_index = data.Content.findIndex(item => item.content_id === this.contentId);
+      data.Content.splice(content_index, 1)
       this.$router.push({
-        path: '/board/free/'
+        path: '/board/free'
       })
     },
-    updateContent() {
-      this.updateObject.title = this.subject;
-      this.updateObject.context = this.context;
+    updateData() {
       this.$router.push({
-        path: '/board/free/'
-      })
-    },
-    cancle() {
-      this.$router.push({
-        path: '/board/free/'
+        path: `/board/free/create/${this.contentId}`
       })
     }
   }
+};
+</script>
+<style scoped>
+.content-detail-content-info {
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
 }
-</script> 
+.content-detail-content-info-left {
+  width: 720px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+.content-detail-content-info-right {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.content-detail-content {
+  border: 1px solid black;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  min-height: 720px;
+}
+.content-detail-button {
+  border: 1px solid black;
+  margin-top: 1rem;
+  padding: 2rem;
+}
+.content-detail-comment {
+  border: 1px solid black;
+  margin-top: 1rem;
+  padding: 2rem;
+}
+</style>
