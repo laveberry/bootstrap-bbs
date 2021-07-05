@@ -52,7 +52,7 @@ export default {
             data.SubComment.push({
                 subcomment_id : data.SubComment[data.SubComment.length -1].subcomment_id + 1, //기존마지막댓글 +1
                 user_id : 1,
-                Comment_id : this.commentId, //게시물 아이디 props로
+                comment_id : this.commentId, //게시물 아이디 props로
                 context : this.context,
                 created_at : '2020-12-24 12:25:44',
                 updated_at: null
