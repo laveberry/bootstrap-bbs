@@ -50,7 +50,7 @@ export default {
         },
         createSubComment(){
             data.SubComment.push({
-                subcomment_id : data.SubComment[data.SubComment.length -1].subcomment_id + 1, //기존마지막댓글 +1
+                subcomment_id : data.SubComment[data.SubComment.length -1].subcomment_id + 1,
                 user_id : 1,
                 comment_id : this.commentId, //게시물 아이디 props로
                 context : this.context,
