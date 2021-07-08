@@ -75,6 +75,7 @@ export default {
 <style scoped>
 .content-detail-content-info {
   border: 1px solid black;
+  /* flex사용준비 */
   display: flex;
   justify-content: space-between;
 }
