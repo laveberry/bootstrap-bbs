@@ -2,7 +2,17 @@
   <div>
     <!-- <b-table striped hover :items="items"></b-table> -->
     <!-- fields 속성 추가 -->
-    <b-table striped hover :items="items" :fields="fields" @row-clicked="rowClick"></b-table>
+    <b-table striped hover :items="items" :fields="fields" @row-clicked="rowClick" 
+            :per-page="perPage" :current-page="currentPage"></b-table>
+
+    <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="my-table"
+      align="center"
+    ></b-pagination>
+
     <b-button @click="writeContent">글쓰기</b-button>
   </div>
 </template>
@@ -24,6 +34,8 @@ import data from '@/data'
             items = items.map(contentItem => {return{...contentItem, user_name: data.User.filter(userItem => userItem.user_id === contentItem.user_id)[0].name}})
 
             return {
+                currentPage: 1,
+                perPage : 10,
                 //데이터 불러오기
                 // items: data.Content,
                 items : items,
@@ -69,6 +81,12 @@ import data from '@/data'
                 this.$router.push({
                     path: '/board/free/create'
                 })
+            }
+        },
+
+        computed: {
+            rows(){
+                return this.items.length
             }
         }
     }
