@@ -55,7 +55,6 @@ import data from '@/data'
                         label: '작성일'
                     },
                     {
-                        ///얘는 왜 또 안나올까..
                         key: 'user_name',
                         label: '글쓴이'
                     }
